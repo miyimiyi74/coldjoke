@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cold joke</title>
+    <script src="./iconfont.js"></script>
+    <style>
+        .icon {
+           width: 1em;
+           height: 1em;
+           vertical-align: -0.15em;
+           fill: currentColor;
+           overflow: hidden;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+
+            background-color: #222;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+        }
+
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #839519;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #ffd700;
+        }
+
+        .navbar .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .navbar .logout-btn {
+            background-color: #ff4444;
+            border: none;
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .navbar .logout-btn:hover {
+            background-color: #ff6666;
+        }
+
+        /* 弹窗样式（注册/登录/用户中心） */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            /* 默认隐藏 */
+            display: none;
+        }
+
+        .modal.active {
+            display: flex; /* 激活时显示 */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #ff4444;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #222;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #444;
+        }
+
+        .modal-footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .modal-footer a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        /* 用户中心样式 */
+        .user-profile {
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .user-profile p {
+            margin-bottom: 10px;
+        }
+
+        .user-profile span {
+            font-weight: bold;
+            color: #222;
+        }
+    </style>
+
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="toggleIcon" onclick="menuToggle()">
+        <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-icon_daxiongmaoduanzuomingxiang
+"></use>
+        </svg>
+    </div>
+    <div id="menu-overlay" >
+        <ul>
+            <li ><a href="wendashi.html">问答式冷笑话</a></li>
+            <li ><a href="juzijoke.html">句子冷笑话</a></li>
+            <li ><a href="shenghuo.html">生活化冷笑话</a></li>
+            <li ><a href="xieyin.html">谐音冷笑话</a></li>
+            <li ><a href="diyujoke.html">地狱冷笑话</a></li>
+            <li ><a href="#">其他冷笑话</a></li>
+
+        </ul>
+    </div>
+    <script type="text/javascript">
+        function menuToggle(){
+            var nav = document.getElementById('menu-overlay')
+            nav.classList.toggle('active')
+            var nav = document.getElementById('toggleIcon')
+            nav.classList.toggle('active')
+        }
+    </script>
+    <div id="shouye">
+        <div id="biaoti">
+            <span class="biaoti">cold joke</span>
+            <span class="biaoti">冷笑话</span>
+        
+        </div>
+        <div id="date">
+            <span class="date"></span>
+        </div>
+            <!-- 新增名言展示区域 -->
+        <div id="quotes-container">
+            <p id="quote-display"></p>
+        </div>
+    </div>
+    <!-- 合并后的日期和名言脚本 -->
+    <script>
+// 日期相关
+    function getCurrentDate() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return `${year}年${month}月${day}日的 `;
+    }
+
+// 名言相关
+    const quotes = [
+      '"所有钟表开始用冻住的脚走路"',
+      '"给影子喂盐，它会醉成三个。"',
+      '"蚂蚁扛着面包屑走过,地壳悄悄减轻了0.0001克。"',
+      '"把沉默包进泡泡纸"',
+      '"用眉毛和勺子跳舞"'
+    ];
+    let currentQuoteIndex = 0;
+    const quoteDisplay = document.getElementById('quote-display');
+
+    function showCurrentQuote() {
+      quoteDisplay.textContent = quotes[currentQuoteIndex];
+    }
+
+    function nextQuote() {
+      currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+      showCurrentQuote();
+    }
+
+// 合并初始化逻辑
+    window.onload = function() {
+  // 初始化日期
+      const dateElement = document.querySelector('.date');
+      if (dateElement) {
+        dateElement.textContent = getCurrentDate();
+      }
+  // 初始化名言
+      showCurrentQuote();
+      setInterval(nextQuote, 86400000); // 24小时切换一次
+    
+     // 2. 页面加载时初始化：检查是否有已登录用户
+
+      checkLoginStatus();
+      initFormEvents();
+    };
+    </script>
+
+
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo">%……&*</div>
+        <div class="menu">
+            <a href="#shouye" onclick="closeAllModals()">首页</a>
+            <a href="javascript:;" onclick="openModal('registerModal')">注册</a>
+            <a href="javascript:;" onclick="openModal('loginModal')" id="loginLink">登录</a>
+            <a href="userCenter.html" id="userCenterLink" style="display: none;">用户中心</a>
+        </div>
+        <div class="user-info" id="userInfo" style="display: none;">
+            <span id="usernameDisplay"></span>
+            <button class="logout-btn" onclick="logout()">退出登录</button>
+        </div>
+    </nav>
+
+    <!-- 注册弹窗 -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>用户注册</h2>
+                <button class="close-btn" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regUsername">用户名</label>
+                    <input type="text" id="regUsername" placeholder="请输入用户名（3-10位）" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">密码</label>
+                    <input type="password" id="regPassword" placeholder="请输入密码（6-16位）" required>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPwd">确认密码</label>
+                    <input type="password" id="regConfirmPwd" placeholder="请再次输入密码" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+                <div class="modal-footer">
+                    已有账号？<a href="javascript:;" onclick="switchModal('registerModal', 'loginModal')">立即登录</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 登录弹窗 -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>用户登录</h2>
+                <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">用户名</label>
+                    <input type="text" id="loginUsername" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">密码</label>
+                    <input type="password" id="loginPassword" placeholder="请输入密码" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+                <div class="modal-footer">
+                    没有账号？<a href="javascript:;" onclick="switchModal('loginModal', 'registerModal')">立即注册</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <script>
+        // 1. 全局变量：存储当前登录用户
+        let currentUser = null;
+
+
+        // 3. 弹窗控制函数
+        // 打开弹窗
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        // 关闭弹窗
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // 切换弹窗（如注册→登录）
+        function switchModal(closeId, openId) {
+            closeModal(closeId);
+            setTimeout(() => openModal(openId), 300);
+        }
+
+        // 关闭所有弹窗
+        function closeAllModals() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+
+        // 4. 登录状态检查：从localStorage读取用户信息
+        function checkLoginStatus() {
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+                updateNavbar(); // 更新导航栏显示
+                updateUserProfile(); // 更新用户中心信息
+            }
+        }
+
+        // 5. 更新导航栏显示（登录/未登录状态切换）
+        function updateNavbar() {
+            const loginLink = document.getElementById('loginLink');
+            const userCenterLink = document.getElementById('userCenterLink');
+            const userInfo = document.getElementById('userInfo');
+            const usernameDisplay = document.getElementById('usernameDisplay');
+
+            if (currentUser) {
+                // 已登录：隐藏注册/登录，显示用户名+退出
+                loginLink.style.display = 'none';
+                userCenterLink.style.display = 'block';
+                userInfo.style.display = 'flex';
+                usernameDisplay.textContent = currentUser.username;
+            } else {
+                // 未登录：显示注册/登录，隐藏用户信息
+                loginLink.style.display = 'block';
+                userCenterLink.style.display = 'none';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        // 6. 注册/登录表单事件初始化
+        function initFormEvents() {
+            // 注册表单提交
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault(); // 阻止表单默认提交
+                register();
+            });
+
+            // 登录表单提交
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                login();
+            });
+        }
+
+        // 7. 注册功能实现
+        function register() {
+            // 获取表单值
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPwd = document.getElementById('regConfirmPwd').value;
+
+            // 表单验证
+            if (!/^.{3,10}$/.test(username)) {
+                alert('用户名必须是3-10位字符！');
+                return;
+            }
+            if (!/^.{6,16}$/.test(password)) {
+                alert('密码必须是6-16位字符！');
+                return;
+            }
+            if (password !== confirmPwd) {
+                alert('两次输入的密码不一致！');
+                return;
+            }
+
+            // 检查用户名是否已存在（从localStorage读取所有用户）
+            const allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+            const userExists = allUsers.some(user => user.username === username);
+            if (userExists) {
+                alert('该用户名已被注册！');
+                return;
+            }
+
+            // 注册成功：创建用户信息
+            const newUser = {
+                username: username,
+                password: password, // 注意：实际项目需加密存储，这里简化为明文
+                regTime: new Date().toLocaleString() // 注册时间（本地时间）
+            };
+
+            // 保存用户数据到localStorage
+            allUsers.push(newUser);
+            localStorage.setItem('allUsers', JSON.stringify(allUsers));
+            localStorage.setItem('currentUser', JSON.stringify(newUser)); // 自动登录
+            currentUser = newUser;
+
+            // 反馈+更新页面
+            alert('注册成功！已自动为您登录～');
+            closeModal('registerModal');
+            updateNavbar();
+            updateUserProfile();
+        }
+
+        // 8. 登录功能实现
+        function login() {
+            // 获取表单值
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            // 检查用户是否存在
+            const allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+            const user = allUsers.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                // 登录成功：保存当前用户
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                currentUser = user;
+
+                // 反馈+更新页面
+                alert('登录成功！');
+                closeModal('loginModal');
+                updateNavbar();
+                updateUserProfile();
+            } else {
+                alert('用户名或密码错误！');
+            }
+        }
+
+        // 9. 退出登录功能
+        function logout() {
+            // 清除本地存储和当前用户
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+
+            // 反馈+更新页面
+            window.dispatchEvent(new Event('storage'));
+            alert('已退出登录～');
+            updateNavbar();
+            closeAllModals();
+        }
+
+        // 10. 更新用户中心信息
+        function updateUserProfile() {
+            if (currentUser) {
+                document.getElementById('profileUsername').textContent = currentUser.username;
+                document.getElementById('profileRegTime').textContent = currentUser.regTime;
+            }
+        }
+    </script>
+    <!-- 仅新增这1行：引入公共功能JS（不影响主界面任何功能） -->
+    <script src="common.js"></script>
+
+
+</body>
+</html>

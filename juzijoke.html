@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字段子类 - 冷笑话乐园</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 30px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #222;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background-color: #444;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 50px;
+            color: #222;
+        }
+
+        .joke-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .joke-content {
+            font-size: 24px;
+            color: #222;
+            line-height: 2.0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .interaction-btns {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .interaction-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .interaction-btn.active {
+            background-color: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        .interaction-btn:hover {
+            border-color: #222;
+        }
+
+        .switch-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .switch-btn {
+            padding: 12px 30px;
+            background-color: #222;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+
+        .switch-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .switch-btn:hover:not(:disabled) {
+            background-color: #444;
+        }
+
+        .joke-index {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html" class="back-btn">返回主界面</a>
+    <h1>文字段子类冷笑话</h1>
+
+    <div class="joke-container">
+        <div class="joke-content" id="currentJokeContent">
+            今天去买水，老板说：“你这瓶水过期了，不能卖你。”
+            <br><br>
+            我愣了一下：“过期了？那你还摆出来干嘛？”
+            <br><br>
+            老板说：“我就是想让你知道，我这儿的水卖得有多快，昨天刚到的货，今天就过期了！”
+            <br><br>
+            我：？？？合着过期是你们的业绩证明？
+        </div>
+
+        <div class="interaction-btns">
+            <button class="interaction-btn" data-joke-id="joke1-1" data-type="like"
+                onclick="saveUserInteraction('joke1-1', 'like')">❤️ 点赞</button>
+            <button class="interaction-btn" data-joke-id="joke1-1" data-type="collect"
+                onclick="saveUserInteraction('joke1-1', 'collect')">⭐ 收藏</button>
+            <button class="interaction-btn" data-joke-id="joke1-1" data-type="dislike"
+                onclick="saveUserInteraction('joke1-1', 'dislike')">❌ 不喜欢</button>
+        </div>
+    </div>
+
+    <div class="switch-buttons">
+        <button class="switch-btn" id="prevBtn" onclick="switchJoke(-1)" disabled>上一个笑话</button>
+        <button class="switch-btn" id="nextBtn" onclick="switchJoke(1)">下一个笑话</button>
+    </div>
+    <div class="joke-index" id="jokeIndex"></div>
+
+    <script src="common.js"></script>
+    <script>
+        // 文字段子类笑话数据源
+        const jokeList = [
+            {
+                id: 'joke2-1',
+                content: `小明和小红约好每天放学在后山碰头，后来他们都成了脑震荡`
+            },
+            {
+                id: "joke2-2",
+                content: `燕子在树上叽叽喳喳叫了十五分钟
+树枝上的叶子终于受不了了
+“咏春？”叶问`
+            },
+            {
+                id: 'joke2-3',
+                content: `我的压箱底笑话 乌龟受伤了要蜗牛给它买药
+                 等半天蜗牛还没回来 乌龟说这个蜗牛慢死了 再不回来我都要死了 
+                这时门外传来蜗牛的声音 你再说我我就不去了`
+            },
+            {
+                id: 'joke2-4',
+                content: `第二天乌龟吃一堑长一智，觉得蜗牛不靠谱，
+                于是喊了蜈蚣帮他买药，又等了半天也是没回来，
+                终破口大骂：这帮玩意没一个靠谱的！
+                这时门口传来蜈蚣的声音：催什么催！老子鞋还没穿完呢`
+            },
+            {
+                id: 'joke2-5',
+                content: `牛说：你饿不饿 晚饭吃什么？
+                          马说：唐 韩愈`
+            },
+            {
+                id: 'joke2-6',
+                content: `鸡的反义词是什么”
+“鸭”
+“不对，是狼”
+“？”
+“因为鸡的叫声是咕咕哒，反过来是哒咕咕，大哥哥是狼`
+            },
+
+            // 可以继续添加更多笑话
+        ];
+
+        let currentIndex = 0;
+
+        window.onload = function () {
+            renderCurrentJoke();
+            renderInteractionStatus();
+        };
+
+        function renderCurrentJoke() {
+            const currentJoke = jokeList[currentIndex];
+            document.getElementById('currentJokeContent').innerHTML = currentJoke.content;
+
+            // 1. 同步互动按钮的笑话id
+            document.querySelectorAll('.interaction-btn').forEach(btn => {
+                btn.dataset.jokeId = currentJoke.id;
+                // 清除所有按钮的active样式（关键：避免上一个笑话的状态残留）
+                btn.classList.remove('active');
+            });
+
+            // 2. 更新序号
+            document.getElementById('jokeIndex').textContent = `${currentIndex + 1}/${jokeList.length}`;
+
+            // 3. 更新切换按钮状态
+            updateSwitchButtons();
+
+            // 4. 重新渲染当前笑话的互动状态（基于本地存储）
+            renderInteractionStatus();
+        }
+
+        function updateSwitchButtons() {
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('nextBtn').disabled = currentIndex === jokeList.length - 1;
+        }
+
+        function switchJoke(dir) {
+            currentIndex += dir;
+            currentIndex = Math.max(0, Math.min(currentIndex, jokeList.length - 1));
+            renderCurrentJoke();
+        }
+    </script>
+</body>
+
+</html>

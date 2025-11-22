@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问答互动类 - 冷笑话乐园</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 30px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #222;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background-color: #444;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 50px;
+            color: #222;
+        }
+
+        /* 笑话容器：居中+占满大部分屏幕，聚焦单个笑话 */
+        .joke-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .joke-question {
+            font-size: 24px;
+            color: #222;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .joke-answer {
+            font-size: 22px;
+            color: #000000;
+            line-height: 1.8;
+            display: none;
+            /* 默认隐藏 */
+            margin-bottom: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #ec4a4a;
+            text-align: center;
+        }
+
+        .toggle-btn {
+            padding: 12px 24px;
+            background-color: #315d7c;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 0 auto 30px;
+            display: block;
+        }
+
+        .toggle-btn:hover {
+            background-color: #83afda;
+        }
+
+        /* 互动按钮容器：居中 */
+        .interaction-btns {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .interaction-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .interaction-btn.active {
+            background-color: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        .interaction-btn:hover {
+            border-color: #222;
+        }
+
+        /* 切换按钮容器：居中+间距 */
+        .switch-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .switch-btn {
+            padding: 12px 30px;
+            background-color: #222;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+
+        .switch-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .switch-btn:hover:not(:disabled) {
+            background-color: #444;
+        }
+
+        /* 笑话序号提示 */
+        .joke-index {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html" class="back-btn">返回主界面</a>
+    <h1>问答互动类冷笑话</h1>
+
+    <!-- 笑话容器：只显示当前条 -->
+    <div class="joke-container">
+        <div class="joke-question" id="currentJokeQuestion"></div>
+        <button class="toggle-btn" onclick="toggleJokeAnswer('currentJokeAnswer')">查看答案</button>
+        <div class="joke-answer" id="currentJokeAnswer"></div>
+
+        <div class="interaction-btns">
+            <button class="interaction-btn" data-joke-id="joke2-1" data-type="like"
+                onclick="saveUserInteraction('joke2-1', 'like')">❤️ 点赞</button>
+            <button class="interaction-btn" data-joke-id="joke2-1" data-type="collect"
+                onclick="saveUserInteraction('joke2-1', 'collect')">⭐ 收藏</button>
+            <button class="interaction-btn" data-joke-id="joke2-1" data-type="dislike"
+                onclick="saveUserInteraction('joke2-1', 'dislike')">❌ 不喜欢</button>
+        </div>
+    </div>
+
+    <!-- 切换按钮 -->
+    <div class="switch-buttons">
+        <button class="switch-btn" id="prevBtn" onclick="switchJoke(-1)" disabled>上一个笑话</button>
+        <button class="switch-btn" id="nextBtn" onclick="switchJoke(1)">下一个笑话</button>
+    </div>
+    <!-- 序号提示 -->
+    <div class="joke-index" id="jokeIndex"></div>
+
+    <script src="common.js"></script>
+    <script>
+        // 问答类笑话数据源（包含id、问题、答案）
+        const jokeList = [
+            {
+                id: "joke1-1",
+                question: "奥特曼打一明星",
+                answer: "打死了"
+            },
+            {
+                id: "joke1-2",
+                question: `小明有一天吃错了东西，胃特别特别疼，
+                到晚上难以入睡,
+                然后他就对着肚子说：胃啊，求求你别疼了，我好难受…
+                你知道他的胃说了什么吗？`,
+                answer: `他的胃说：我不叫胃，我叫楚雨荨`
+            },
+            {
+                id: "joke1-3",
+                question: "什么东西是蓝色的 闻起来像红油漆",
+                answer: "蓝油漆"
+            },
+            {
+                id: "joke1-4",
+                question: `@一个小乖: 我目前知道最最最好笑的冷笑话，
+                我和我妹都笑到肚子痛的，
+                就是有一只鸟被猎人打伤了翅膀但是还是飞越了大西洋，为什么`,
+                answer: `因为它很坚强`
+            },
+            {
+                id: "joke1-5",
+                question: `埃及的法老死了，所有人永驻青春了，谁知道是为什么`,
+                answer: `因为所有人都没法老了`
+            },
+            {
+                id: "joke1-6",
+                question: `什么东西会跑，会叫，爬到人身上人会死`,
+                answer: `卡车`
+            },
+            {
+                id: "joke1-7",
+                question: `为什么两头牛走到岔路口 突然不叫了`,
+                answer: `道不同，不相为哞`
+            },
+            {
+                id: "joke1-8",
+                question: `小明和他的朋友一起去看医生，为什么小明最后自己走了`,
+                answer: `因为朋友医生一起走`
+            },
+            {
+                id: "joke1-9",
+                question: `什么东西有22条腿 毛绒绒的 还会下蛋`,
+                answer: `五张半台球桌`
+            },
+            {
+                id: "joke1-10",
+                question: `有个人生病了去打点滴 他为什么对着点滴笑？`,
+                answer: `因为他笑点低`
+            },
+            // 可以继续添加更多笑话
+        ];
+
+        let currentIndex = 0; // 当前显示的笑话索引（从0开始）
+
+        // 初始化页面：渲染当前笑话+互动状态
+        window.onload = function () {
+            renderCurrentJoke();
+            renderInteractionStatus();
+        };
+
+        function renderCurrentJoke() {
+            const currentJoke = jokeList[currentIndex];
+            // 更新笑话内容
+            document.getElementById('currentJokeQuestion').textContent = currentJoke.question;
+            document.getElementById('currentJokeAnswer').textContent = currentJoke.answer;
+            // 重置答案为隐藏状态+按钮文字
+            document.getElementById('currentJokeAnswer').style.display = 'none';
+            document.querySelector('.toggle-btn').textContent = '查看答案';
+            // 更新互动按钮的data-joke-id并清除所有样式
+            document.querySelectorAll('.interaction-btn').forEach(btn => {
+                btn.dataset.jokeId = currentJoke.id;
+                // 关键：清除上一个笑话的互动状态样式
+                btn.classList.remove('active');
+            });
+            // 更新序号提示
+            document.getElementById('jokeIndex').textContent = `${currentIndex + 1}/${jokeList.length}`;
+            // 更新切换按钮状态
+            updateSwitchButtons();
+            // 重新渲染当前笑话的互动状态（从本地存储读取）
+            renderInteractionStatus();
+        }
+
+        // 更新切换按钮状态（禁用/启用）
+        function updateSwitchButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            // 第1条笑话：禁用上一个
+            prevBtn.disabled = currentIndex === 0;
+            // 最后1条笑话：禁用下一个
+            nextBtn.disabled = currentIndex === jokeList.length - 1;
+        }
+
+        // 切换笑话（dir：-1=上一个，1=下一个）
+        function switchJoke(dir) {
+            currentIndex += dir;
+            // 边界保护（防止超出范围）
+            if (currentIndex < 0) currentIndex = 0;
+            if (currentIndex >= jokeList.length) currentIndex = jokeList.length - 1;
+            // 重新渲染当前笑话
+            renderCurrentJoke();
+        }
+    </script>
+</body>
+
+</html>
