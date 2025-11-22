@@ -5,6 +5,16 @@
     margin: 0;
     padding: 0;
     font-family:'Poppins',sans-serif;
+        /* 新增：优化移动端滑动体验 */
+    -webkit-user-select: none; /* 禁止文本被选中（避免滑动时误选文字） */
+    user-select: none;
+    -webkit-overflow-scrolling: touch; /* 开启iOS原生平滑滚动 */
+}
+body {
+    background-color: #f5f5f5;
+    padding: 30px;
+    overflow-x: auto; /* 允许横向滚动 */
+    overflow-y: auto; /* 允许纵向滚动 */
 }
 #menu-overlay
 {
